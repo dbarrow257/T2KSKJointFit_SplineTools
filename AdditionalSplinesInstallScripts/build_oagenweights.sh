@@ -2,7 +2,7 @@ export OAGEN_DIR=OAGenWeightsApps
 
 git clone git@github.com:t2k-software/OAGenWeightsApps ${OAGEN_DIR}
 cd ${OAGEN_DIR}
-git checkout cd00a6c562844e2f926947c0bfc037a15d26433f #SKReprodOA2020_AtmosphericJointFit
+git checkout 37b53493b29d02988d53b54d29817f0e53224046 #DBarrow_JointFit
 
 mkdir build; cd build;
 cmake ../ -DUSE_SK=ON

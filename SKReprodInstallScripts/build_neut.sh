@@ -31,4 +31,4 @@ mkdir build; cd build;
 make -j 8
 make install
 
-source ${NEUT_DIR}/build/Linux/setup.sh
+source ./Linux/setup.sh

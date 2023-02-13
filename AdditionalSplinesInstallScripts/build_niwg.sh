@@ -2,7 +2,7 @@ export NIWG_DIR=NIWGReWeight
 
 git clone git@github.com:/t2k-software/NIWGReWeight ${NIWG_DIR}
 cd ${NIWG_DIR}
-git checkout daa138eeffc3fe8dbe2e3a8995d77144b5347744 #SK_ReprodOA2020
+git checkout fafbb9fcb4535c3ac46cfe2f7d63df80cf2beab5 #DBarrow_JointFit_AdditionalSplines
 
 mkdir build; cd build; 
 cmake ../ -DUSE_NEUT=1
