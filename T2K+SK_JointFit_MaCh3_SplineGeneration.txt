@@ -1,0 +1,75 @@
+*** General Information
+
+This set of tools should (hopefully) allow the user to build the systematics splines for the beam and atmospheric samples for the first iteration of the joint T2K+SK MaCh3 analysis. To build the splines, first a set of weight files for the given MC is produced for several known parameter variations, which is then used to build TSpline3 objects from.
+
+There are several complications within this analysis. Firstly, this analysis is built from the OA2020 beam analysis. Therefore, the systemaics used within that analysis should be replicated. However, there are several systematics within the joint analysis which have been technically implemented within the T2KRW stack since the 2020 beam analysis. 
+
+Therefore, to create the systematic splines to these requirements, there exist two implementations of the T2KRW stack. Firstly, the 'SKReprod' tools which build the OA2020-identical splines, and secondly, the 'AdditionalSplines' tools which build all the rest of the splines. Both sets of these tools contain the full T2KRW stack: neut, NIWGRW, T2KRW, OAGenWeightsApps, XsecResponse. As the 'AdditionalSplines' tools require building SI splines, that version of the stack also contains FSIFitter and GEANTRW.
+
+Once the splines from each stack has been produced, they need to be added together. A 'hadd' tool is supplied to do this task. As an added complication, the atmospheric MC has high and low energy splines from the same systematic. As a technical limitation to ensure they are separated in the MaCh3 framework, the high energy version of the splines need to be renamed to include a '_HighEnergy' suffix.
+
+In yet another complication, the 2020 beam analysis requires that the CC1pipm and CC1pi0 modes are handled by the controlled by the same spline. However, the additional atmospheric splines require that the CC1pipm and CC1pi0 be split. As a technical limitation, the same MaCh3 modes have to be used in the covarianceXsec object. To get around this, the splines for the beam samples (created by XsecResponse) are created using both CC1pi0 and CC1pipm mode events, and then 'copied' to have a seperate set of splines for the two modes. This ensures the response for CC1pipm/CC1pi0 events are the same for the beam samples.
+
+As a final complication, the different binning (Erec and Theta for beam, Momentum and Direction for atmospheric) means that there are two XsecResponse tools. With enough effort, these could be unified. However, that seems like effort... For now, two sets of the XsecResponse tools will be built for each version of the software stack.
+
+This guide assumes that you have access to the atmospheric and beam MC, mtupled using the 'iclass' and oscillation channel mode combinations. For atmospheric samples, 'iclass' is equivalent to ATMPDEventType. I will make a guide for creating those mtuples later...
+
+*** Dependancies
+
+This guide will assume the following dependancies have been installed. The provided versions have been tested, although it's likely other versions will work. However, other versions should be tested and validated.
+
+- gcc [4.8.5]
+- cmake [3.17.5]
+- ROOT [5.34.38]
+- imake [1.0.7]
+- makedepend [1.0.5]
+- CERNLib [2005] -> Installation instructions here: https://t2k.org/asg/xsec/niwgdocs/neut/install_neut
+
+In both software stacks, a 'setup_Deps.sh' is included. It is assumed the user can correctly modify this script to setup the correct environment variables to load these dependancies.
+
+*** SKReprod Stack Installation
+
+Starting with the SKReprod software stack, there is a directory SKReprodInstallScripts which has all the scripts to build the correct versions of the code to replicate the 2020 beam analysis. There also exists 'setup_*.sh' (* = SK, T2K) which needs to be sourced after installation to ensure the correct environment variables are defined.
+
+In general, the way in which the installation will proceed is that a single tool is built, the 'setup_*.sh' script is re-sourced and the next tool is built, etc.
+
+The installation steps are equivalent for beam and atmospheric samples, up until the XsecResponse tools are built. As mentioned, there are two versions of the XsecResponse tool which need to be installed. The setup steps should be followed using the 'setup_SK.sh' script as a basis.
+
+The following steps should be taken to install the SKReprod stack:
+
+1. Comment out all the NEUT/NIWGRW/T2KRW/OAGenWeightsApps/XsecResp lines from 'setup_SK.sh'. Then source setup_SK.sh: 'source setup_SK.sh'
+2. 'sh build_neut.sh' installs and builds neut. If there are any 'autolib' looking errors, follow the instructions: https://github.com/neut-devel/neut . Once built, uncomment the neut lines in 'setup_SK.sh' and resource setup_SK.sh
+3. 'sh build_niwg.sh' installs and builds NIWGRW. Once built, uncomment the NIWGRW lines in 'setup_SK.sh' and resource setup_SK.sh
+4. 'sh build_t2krw.sh' installs and builds T2KRW. Once built, uncomment the T2KRW lines in 'setup_SK.sh' and resource setup_SK.s
+5. 'sh build_oagenweightsapps.sh' installs and builds OAGenWeightsApps. Once built, uncomment the OAGenWeightsApps lines in 'setup_SK.sh' and resource setup_SK.sh
+
+This is the point at which the beam and atmospheric tools diverge, requiring a separate installation of XsecResponse. 
+
+** When building, or sourcing, the different XsecResp tools, a clean working environment is required. **
+
+6a. 'sh build_xsecresp_sksamples.sh' installs the atmospheric version of XsecResponse. Once built, uncomment the XsecResponse lines in 'setup_SK.sh' and resource setup_SK.sh
+6b. 'sh build_xsecresp_t2ksamples.sh' installs the beam version of XsecResponse. Once built, uncomment the XsecResponse lines in 'setup_T2K.sh' and resource setup_T2K.sh
+
+At this point all the tools should be correctly installed, linked and built. 
+
+*** AdditionalSplines Stack Installation
+
+Firstly, read the instructions for 'SKReprod'. There are important details which need to be followed as the installation is very similar.
+
+Starting with the AdditionalSplinesInstallScripts directory, proceed with the following steps:
+
+1. Comment out all the NEUT/NIWGRW/FSIFitter/GeantRW/T2KRW/OAGenWeightsApps/XsecResp lines from 'setup_SK.sh'. Then source setup_SK.sh: 'source setup_SK.sh'
+2. 'sh build_neut.sh' installs and builds neut. If there are any 'autolib' looking errors, follow the instructions: https://github.com/neut-devel/neut . Once built, uncomment the neut lines in 'setup_SK.sh' and resource setup_SK.sh
+3. 'sh build_niwg.sh' installs and builds NIWGRW. Once built, uncomment the NIWGRW lines in 'setup_SK.sh' and resource setup_SK.sh
+4. 'sh build_fsifitter.sh' installs and builds FSIFitter. This will take a while as it has to install a custom install of Octave. Once built, uncomment the FSIFitter lines in 'setup_SK.sh' and resource setup_SK.sh
+5. 'sh build_geantrw.sh' installs and builds GEANTRW. Once built, uncomment the GEANTRW lines in 'setup_SK.sh' and resource setup_SK.sh
+6. 'sh build_t2krw.sh' installs and builds T2KRW. Once built, uncomment the T2KRW lines in 'setup_SK.sh' and resource setup_SK.s
+7. 'sh build_oagenweightsapps.sh' installs and builds OAGenWeightsApps. Once built, uncomment the OAGenWeightsApps lines in 'setup_SK.sh' and resource setup_SK.sh
+
+This is the point at which the beam and atmospheric tools diverge, requiring a separate installation of XsecResponse. 
+
+** When building, or sourcing, the different XsecResp tools, a clean working environment is required. **
+
+8a. 'sh build_xsecresp_sksamples.sh' installs the atmospheric version of XsecResponse. Once built, uncomment the XsecResponse lines in 'setup_SK.sh' and resource setup_SK.sh
+8b. 'sh build_xsecresp_t2ksamples.sh' installs the beam version of XsecResponse. Once built, uncomment the XsecResponse lines in 'setup_T2K.sh' and resource setup_T2K.sh
+
