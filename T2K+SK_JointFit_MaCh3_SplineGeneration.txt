@@ -73,3 +73,20 @@ This is the point at which the beam and atmospheric tools diverge, requiring a s
 8a. 'sh build_xsecresp_sksamples.sh' installs the atmospheric version of XsecResponse. Once built, uncomment the XsecResponse lines in 'setup_SK.sh' and resource setup_SK.sh
 8b. 'sh build_xsecresp_t2ksamples.sh' installs the beam version of XsecResponse. Once built, uncomment the XsecResponse lines in 'setup_T2K.sh' and resource setup_T2K.sh
 
+*** Running the weight and spline generation code
+
+ExampleRunScript contains some code to generate the run scripts and submission scripts for a Condor scheduler. There exists code to be able to generate both beam and atmospheric weight and spline files using this example code.
+
+'BatchRunScriptBase.sh' is the run script which gets copied and editd to create an individual file for each sample and oscillation channel combination. This file will need modifying to point at the users individual install:
+
+- 'T2KUtilDir' -> Should point at the head directory of the software stack. This should point to the 'SKReprod' or 'AdditionalSplines' stack head directory.
+- 'XsecRespDir' -> Should point at the XsecResponse installation within the head directory. This will be beam or atmospheric sample specific.
+- 'MTupleDir' -> Should point to a directory containing the mtupled (i.e. split by sample and oscillation channel) MC
+- 'WtDir' -> Should point to a directory where the weight files will be stored.
+- 'SplineDir' -> Should point to a directory where the spline files will be stored.
+
+This file contains patterns 'SAMPLE' and 'CHANNEL' which get editted by Run.py . These should not be changed.
+
+'BatchSubmitScriptBase.sh' is the submission script for a Condor scheduler. This should be modified to point to the directory in which the submission scripts will be created. Again, the patterns should not changed.
+
+When finished, there should be '196' atmospheric spline files if the official SK oscillation samples are used.
