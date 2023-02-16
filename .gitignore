@@ -13,3 +13,10 @@ SKReprodInstallScripts/T2KReWeight/
 SKReprodInstallScripts/XsecResponse_SK/
 SKReprodInstallScripts/XsecResponse_T2K/
 SKReprodInstallScripts/neut/
+
+PostGeneration/SKSamples/AdditionalSplines
+PostGeneration/SKSamples/HaddedSplines/
+PostGeneration/SKSamples/SKReprod
+PostGeneration/T2KSamples/AdditionalSplines
+PostGeneration/T2KSamples/HaddedSplines/
+PostGeneration/T2KSamples/SKReprod
