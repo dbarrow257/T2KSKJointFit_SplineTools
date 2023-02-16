@@ -77,8 +77,6 @@ This is the point at which the beam and atmospheric tools diverge, requiring a s
 
 ExampleRunScript contains some code to generate the run scripts and submission scripts for a Condor scheduler. There exists code to be able to generate both beam and atmospheric weight and spline files using this example code.
 
-
-
 'BatchRunScriptBase.sh' is the run script which gets copied and editd to create an individual file for each sample and oscillation channel combination. This file will need modifying to point at the users individual install:
 
 - 'T2KUtilDir' -> Should point at the head directory of the software stack. This should point to the 'SKReprod' or 'AdditionalSplines' stack head directory.
@@ -90,6 +88,8 @@ ExampleRunScript contains some code to generate the run scripts and submission s
 This file contains patterns 'SAMPLE' and 'CHANNEL' which get editted by Run.py . These should not be changed.
 
 'BatchSubmitScriptBase.sh' is the submission script for a Condor scheduler. This should be modified to point to the directory in which the submission scripts will be created. Again, the patterns should not changed.
+
+Once the variables have been set to point to the correct directories, the jobs can be spawned and submitted using 'python Run.py'
 
 When finished, there should be '196' atmospheric spline files and '60' beam spline files per software stack (for a total of 512), if the official SK and OA2020 T2K oscillation samples are used.
 
@@ -123,3 +123,71 @@ This script is run by 'python HaddSplines_Repo_Additional_SK.py'
 This script should be copied into 'HaddedSplines' directory and ran with 'root -b RenameSplines_HighEnergy.C'
 
 * T2KSamples
+
+The file directory in PostGeneration/T2KSamples should be the same as that in the PostGeneration/SKSamples:
+
+[barrowd@mercury009 T2KSKJointFit_SplineTools]$ ls -l PostGeneration/T2KSamples/
+total 115
+lrwxrwxrwx 1 barrowd t2k   92 Feb 16 08:16 AdditionalSplines -> /opt/ppd/scratch-2022/barrow/T2KSKJointFit_SplineTools/runbox/AdditionalSplines/T2K/Splines/
+-rw-r--r-- 1 barrowd t2k  139 Feb 16 10:30 Go.py
+drwxr-xr-x 2 barrowd t2k   64 Feb 16 12:18 HaddedSplines
+-rw-r--r-- 1 barrowd t2k  544 Feb 16 08:20 HaddSplines_Repo_Additional_SK.py
+-rw-r--r-- 1 barrowd t2k  487 Feb 16 08:14 RenameSplineFiles_MaCh32020Convention.py
+-rw-r--r-- 1 barrowd t2k 8390 Feb 16 10:30 RenameSplines_CC1pi_to_CC1pipm_and_CC1pi0.C
+lrwxrwxrwx 1 barrowd t2k   83 Feb 16 08:16 SKReprod -> /opt/ppd/scratch-2022/barrow/T2KSKJointFit_SplineTools/runbox/SKReprod/T2K/Splines/
+[barrowd@mercury009 T2KSKJointFit_SplineTools]$ 
+
+In PostGeneration/T2KSamples, there are several macros which should be ran in the following order:
+
+- RenameSplineFiles_MaCh32020Convention.py  -> This is a very basic renaming script to match the filenaming scheme set out in MaCh3. A version of this macro should be copied into each of the SKReprod and AdditionalSplines directory and run using 'python RenameSplineFiles_MaCh32020Convention.py'.
+
+- HaddSplines_Repo_Additional_SK.py -> This should be ran in the same way as that in PostGeneration/SKSamples
+
+- RenameSplines_CC1pi_to_CC1pipm_and_CC1pi0.C & Go.py  -> This macro copies the cc1pi splines and renames them to cc1pipm and cc1pi0. This is due to the technical requirement that the CC1pi0 and CC1pipm modes being treated independently for the atmospheric MC, but identically for the beam MC. This is a particularly slow macro and spawns multiple jobs so I would suggest monitoring the jobs with 'top' command. A list of spline files exists within the macro, and it performs this copying on a file-by-file basis [ran via "root -b 'RenameSplines_CC1pi_to_CC1pipm_and_CC1pi0.C(IndexOfFileToModify)'"]. The Go.py script spawns 100 jobs, where each job has a specific index in the range 0-100. Consequently, there will be some errors about missing files. These can be ignored *hopefully*. Both RenameSplines_CC1pi_to_CC1pipm_and_CC1pi0 and Go.py should be copied into HaddedSplines directory, and then ran with 'python Go.py'. Monitor the jobs and wait for them to finish.
+
+*** Final Remarks
+
+At this point, there should be two directories with the final processed splines: PostGeneration/SKSamples/HaddedSplines (196 files) and PostGeneration/T2KSamples/HaddedSplines (60 files). These should be sym-linked within the MaCh3 framework.
+
+If everything worked, congratulations! If it didn't, drop a slack message on #mach3-jointskatmospheric and someone (probably Dan will get back to you). Developments are encouraged, but 'thar be dragons' in this codebase...
+
+   (  )   /\   _                 (     
+    \ |  (  \ ( \.(               )                      _____
+  \  \ \  `  `   ) \             (  ___                 / _   \
+ (_`    \+   . x  ( .\            \/   \____-----------/ (o)   \_
+- .-               \+  ;          (  O                           \____
+                          )        \_____________  `              \  /
+(__                +- .( -'.- <. - _  VVVVVVV VV V\                 \/
+(_____            ._._: <_ - <- _  (--  _AAAAAAA__A_/                  |
+  .    /./.+-  . .- /  +--  - .     \______________//_              \_______
+  (__ ' /x  / x _/ (                                  \___'          \     /
+ , x / ( '  . / .  /                                      |           \   /
+    /  /  _/ /    +                                      /              \/
+   '  (__/                                             /                  \
+
+*** Example directory structure for spline/weight file creation
+
+[barrowd@mercury009 T2KSKJointFit_SplineTools]$ ls runbox/
+AdditionalSplines  SKReprod
+[barrowd@mercury009 T2KSKJointFit_SplineTools]$ ls runbox/AdditionalSplines/
+SK  T2K
+[barrowd@mercury009 T2KSKJointFit_SplineTools]$ ls runbox/AdditionalSplines/SK/
+RunScripts  Splines  Weights
+
+[barrowd@mercury009 T2KSKJointFit_SplineTools]$ ls runbox/AdditionalSplines/SK/RunScripts/
+BatchRunScript_10_10.err  BatchRunScript_13_12.sh   BatchRunScript_16_5.out   BatchRunScript_1_9.err   BatchRunScript_5_4.sh    BatchRunScript_9_12.out     BatchSubmitScript_17_6.sh
+BatchRunScript_10_10.out  BatchRunScript_13_1.err   BatchRunScript_16_5.sh    BatchRunScript_1_9.out   BatchRunScript_5_5.err   BatchRunScript_9_12.sh      BatchSubmitScript_17_7.sh
+BatchRunScript_10_10.sh   BatchRunScript_13_1.out   BatchRunScript_16_6.err   BatchRunScript_1_9.sh    BatchRunScript_5_5.out   BatchRunScript_9_1.err      BatchSubmitScript_17_8.sh
+...
+
+[barrowd@mercury009 T2KSKJointFit_SplineTools]$ ls runbox/AdditionalSplines/SK/Weights/
+sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample10_Channel10_T2KReWeight_Weights.root  sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample19_Channel4_T2KReWeight_Weights.root
+sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample10_Channel11_T2KReWeight_Weights.root  sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample19_Channel5_T2KReWeight_Weights.root
+sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample10_Channel12_T2KReWeight_Weights.root  sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample19_Channel6_T2KReWeight_Weights.root
+...
+
+[barrowd@mercury009 T2KSKJointFit_SplineTools]$ ls runbox/AdditionalSplines/SK/Splines/
+sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample10_Channel10_XsecResponse_Splines.root  sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample19_Channel7_XsecResponse_Splines.root
+sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample10_Channel11_XsecResponse_Splines.root  sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample19_Channel8_XsecResponse_Splines.root
+sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample10_Channel12_XsecResponse_Splines.root  sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel10_XsecResponse_Splines.root
+...
