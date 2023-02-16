@@ -97,7 +97,7 @@ When finished, there should be '196' atmospheric spline files and '60' beam spli
 
 The splines from the 'SKReprod' and 'AdditionalSplines' software stacks need to be h-added together and then modified in accordance with the file structure that MaCh3 expects
 
-* SKSamples
+** SKSamples **
 
 In PostGeneration/SKSamples directory, two macro files exist: 'HaddSplines_Repo_Additional_SK.py' and 'RenameSplines_HighEnergy.C'. They should be ran in this order.
 
@@ -122,7 +122,7 @@ This script is run by 'python HaddSplines_Repo_Additional_SK.py'
 
 This script should be copied into 'HaddedSplines' directory and ran with 'root -b RenameSplines_HighEnergy.C'
 
-* T2KSamples
+** T2KSamples **
 
 The file directory in PostGeneration/T2KSamples should be the same as that in the PostGeneration/SKSamples:
 
@@ -151,6 +151,7 @@ At this point, there should be two directories with the final processed splines:
 
 If everything worked, congratulations! If it didn't, drop a slack message on #mach3-jointskatmospheric and someone (probably Dan will get back to you). Developments are encouraged, but 'thar be dragons' in this codebase...
 
+```
    (  )   /\   _                 (     
     \ |  (  \ ( \.(               )                      _____
   \  \ \  `  `   ) \             (  ___                 / _   \
@@ -163,7 +164,8 @@ If everything worked, congratulations! If it didn't, drop a slack message on #ma
   (__ ' /x  / x _/ (                                  \___'          \     /
  , x / ( '  . / .  /                                      |           \   /
     /  /  _/ /    +                                      /              \/
-   '  (__/                                             /                  \
+   '  (__/                                             /                  \   
+```
 
 *** Example directory structure for spline/weight file creation
 
