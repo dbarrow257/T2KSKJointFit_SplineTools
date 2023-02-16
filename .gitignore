@@ -1,0 +1,15 @@
+AdditionalSplinesInstallScripts/FSIFitter/
+AdditionalSplinesInstallScripts/GeantReWeight/
+AdditionalSplinesInstallScripts/NIWGReWeight/
+AdditionalSplinesInstallScripts/OAGenWeightsApps/
+AdditionalSplinesInstallScripts/T2KReWeight/
+AdditionalSplinesInstallScripts/XsecResponse_SK/
+AdditionalSplinesInstallScripts/XsecResponse_T2K/
+AdditionalSplinesInstallScripts/neut/
+
+SKReprodInstallScripts/NIWGReWeight/
+SKReprodInstallScripts/OAGenWeightsApps/
+SKReprodInstallScripts/T2KReWeight/
+SKReprodInstallScripts/XsecResponse_SK/
+SKReprodInstallScripts/XsecResponse_T2K/
+SKReprodInstallScripts/neut/
