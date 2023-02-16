@@ -151,6 +151,7 @@ At this point, there should be two directories with the final processed splines:
 
 If everything worked, congratulations! If it didn't, drop a slack message on #mach3-jointskatmospheric and someone (probably Dan will get back to you). Developments are encouraged, but 'thar be dragons' in this codebase...
 
+```
    (  )   /\   _                 (     
     \ |  (  \ ( \.(               )                      _____
   \  \ \  `  `   ) \             (  ___                 / _   \
@@ -163,7 +164,8 @@ If everything worked, congratulations! If it didn't, drop a slack message on #ma
   (__ ' /x  / x _/ (                                  \___'          \     /
  , x / ( '  . / .  /                                      |           \   /
     /  /  _/ /    +                                      /              \/
-   '  (__/                                             /                  \
+   '  (__/                                             /                  \   
+```
 
 *** Example directory structure for spline/weight file creation
 
