@@ -1,17 +1,17 @@
 #! /bin/bash
 
-T2KUtilDir="/opt/ppd/t2k/users/barrowd/T2KSoftware/SKReprod/"
-XsecRespDir="/opt/ppd/t2k/users/barrowd/T2KSoftware/SKReprod/XsecResponse_T2K/"
+T2KUtilDir="/opt/ppd/scratch-2022/barrow/T2KSKJointFit_SplineTools/SKReprodInstallScripts/"
+XsecRespDir="/opt/ppd/scratch-2022/barrow/T2KSKJointFit_SplineTools/SKReprodInstallScripts/XsecResponse_T2K/"
 
 MTupleDir="/opt/ppd/t2k/users/barrowd/T2KSoftware/SKReprod/T2KMtuples/"
 MTuplePrefix="t2ksk19b.fqv4r0."
 MTupleSuffix=".root"
 
-WtDir="/opt/ppd/t2k/users/barrowd/T2KSoftware/SKReprod/T2KReWeightOutput/T2K/"
+WtDir="/opt/ppd/scratch-2022/barrow/T2KSKJointFit_SplineTools/runbox/SKReprod/T2K/Weights/"
 WtPrefix="t2ksk19b.fqv4r0."
 WtSuffix="_T2KReWeight_Weights.root"
 
-SplineDir="/opt/ppd/t2k/users/barrowd/T2KSoftware/SKReprod/XsecResponseOutput/T2K/"
+SplineDir="/opt/ppd/scratch-2022/barrow/T2KSKJointFit_SplineTools/runbox/SKReprod/T2K/Splines/"
 SplinePrefix="t2ksk19b.fqv4r0."
 SplineSuffix="_XsecResponse_Splines.root"
 

@@ -77,6 +77,8 @@ This is the point at which the beam and atmospheric tools diverge, requiring a s
 
 ExampleRunScript contains some code to generate the run scripts and submission scripts for a Condor scheduler. There exists code to be able to generate both beam and atmospheric weight and spline files using this example code.
 
+
+
 'BatchRunScriptBase.sh' is the run script which gets copied and editd to create an individual file for each sample and oscillation channel combination. This file will need modifying to point at the users individual install:
 
 - 'T2KUtilDir' -> Should point at the head directory of the software stack. This should point to the 'SKReprod' or 'AdditionalSplines' stack head directory.
@@ -93,7 +95,7 @@ When finished, there should be '196' atmospheric spline files and '60' beam spli
 
 *** Post-generation
 
-The splines from the 'SKReprod' and 'AdditionalSplines' software stacks need to be h-added together.
+The splines from the 'SKReprod' and 'AdditionalSplines' software stacks need to be h-added together and then modified in accordance with the file structure that MaCh3 expects
 
 * SKSamples
 
@@ -110,10 +112,14 @@ drwxr-xr-x 2 barrowd t2k  198 Feb 15 08:51 HaddedSplines
 lrwxrwxrwx 1 barrowd t2k   82 Feb 15 08:48 SKReprod -> /opt/ppd/scratch-2022/barrow/T2KSKJointFit_SplineTools/runbox/SKReprod/SK/Splines/
 [barrowd@mercury009 SKSamples]$ 
 
-The script combines the output of AdditionalSplines and SKReprod, and saves the summed file in HaddedSplines. I do this by sym-linking the separat output and making a new directory for the summed output.
+The script combines the output of AdditionalSplines and SKReprod, and saves the summed file in HaddedSplines. I do this by sym-linking the separate output and making a new directory for the summed output(mkdir HaddedSplines).
 
-Important ** -> This script spawns a lot of 'hadd' jobs and the performs a sleep command. The hadd jobs typically finish well before the sleep command does. There I run this script in the background and monitor the 'hadd' jobs using 'top'. It's not great, but who's code ever is...
+Important ** -> This script spawns a lot of 'hadd' jobs and then performs a sleep command. The hadd jobs typically finish well before the sleep command does. There I run this script in the background and monitor the 'hadd' jobs using 'top'. It's not great, but who's code ever is...
+
+This script is run by 'python HaddSplines_Repo_Additional_SK.py'
 
 - RenameSplines_HighEnergy.C renames the high energy splines to ensure they are technically separated from the low energy counterparts when loaded into MaCh3. This root macro needs to copied into the HaddedSplines folder and ran with 'root -b RenameSplines_HighEnergy.C'. There will be parts where it prints scary looking console output. This is because it assumes every sample has 12 oscillation channels (including taus) but the PC and Upmu samples don't. These kind of errors can be ignored.
 
+This script should be copied into 'HaddedSplines' directory and ran with 'root -b RenameSplines_HighEnergy.C'
 
+* T2KSamples

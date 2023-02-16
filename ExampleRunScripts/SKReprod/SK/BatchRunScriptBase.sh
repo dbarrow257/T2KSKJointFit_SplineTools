@@ -1,17 +1,17 @@
 #! /bin/bash
 
-T2KUtilDir="/opt/ppd/t2k/users/barrowd/T2KSoftware/SKReprod/"
-XsecRespDir="/opt/ppd/t2k/users/barrowd/T2KSoftware/SKReprod/XsecResponse_SK/"
+T2KUtilDir="/opt/ppd/scratch-2022/barrow/T2KSKJointFit_SplineTools/SKReprodInstallScripts/"
+XsecRespDir="/opt/ppd/scratch-2022/barrow/T2KSKJointFit_SplineTools/SKReprodInstallScripts/XsecResponse_SK/"
 
 MTupleDir="/opt/ppd/t2k/users/barrowd/T2KSoftware/SKReprod/SKMtuples/"
 MTuplePrefix="sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_SampleSAMPLE_Channel"
 MTupleSuffix=".root"
 
-WtDir="/opt/ppd/scratch-2022/barrow/RemadeSplines/SKReprod/T2KReWeightOutput/SK/"
+WtDir="/opt/ppd/scratch-2022/barrow/T2KSKJointFit_SplineTools/runbox/SKReprod/SK/Weights/"
 WtPrefix="sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_SampleSAMPLE_Channel"
 WtSuffix="_T2KReWeight_Weights.root"
 
-SplineDir="/opt/ppd/scratch-2022/barrow/RemadeSplines/SKReprod/XsecResponseOutput/SK/"
+SplineDir="/opt/ppd/scratch-2022/barrow/T2KSKJointFit_SplineTools/runbox/SKReprod/SK/Splines/"
 SplinePrefix="sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_SampleSAMPLE_Channel"
 SplineSuffix="_XsecResponse_Splines.root"
 
